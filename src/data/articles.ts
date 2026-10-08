@@ -1,5 +1,7 @@
 export interface Article {
   id: string;
+  slug: string;
+  aliases: string[];
   number: number;
   category: string;
   title: string;
@@ -30,6 +32,8 @@ import serumImg from '../assets/images/glow_serum_1791430440500.jpg';
 export const ARTICLES: Article[] = [
   {
     id: 'blog1',
+    slug: 'routine',
+    aliases: ['skincare-routine', '10-steps', 'blog1'],
     number: 1,
     category: 'SKINCARE',
     title: '10 Essential Steps for a Simple Skincare Routine',
@@ -88,6 +92,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog2',
+    slug: 'sunscreen',
+    aliases: ['spf', 'sun-protection', 'blog2'],
     number: 2,
     category: 'SUN PROTECTION',
     title: 'Why Sunscreen Is Important for Healthy Skin',
@@ -134,6 +140,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog3',
+    slug: 'cleanser',
+    aliases: ['face-wash', 'cleansing', 'blog3'],
     number: 3,
     category: 'CLEANSING',
     title: 'How to Choose the Right Face Cleanser',
@@ -179,6 +187,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog4',
+    slug: 'moisturizer',
+    aliases: ['hydration', 'skin-barrier', 'moisturizers', 'blog4'],
     number: 4,
     category: 'HYDRATION',
     title: 'The Importance of Moisturizer in Skincare',
@@ -223,6 +233,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog5',
+    slug: 'self-care',
+    aliases: ['beauty-habits', 'selfcare', 'habits-5', 'blog5'],
     number: 5,
     category: 'SELF CARE',
     title: '5 Simple Self-Care Beauty Habits',
@@ -262,6 +274,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog6',
+    slug: 'makeup',
+    aliases: ['natural-makeup', 'everyday-makeup', 'clean-makeup', 'blog6'],
     number: 6,
     category: 'MAKEUP',
     title: 'Everyday Makeup Tips for a Natural Look',
@@ -302,6 +316,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog7',
+    slug: 'skin-types',
+    aliases: ['skin-type', 'identify-skin-type', 'skin-quiz', 'blog7'],
     number: 7,
     category: 'SKIN TYPES',
     title: 'How to Identify Your Skin Type',
@@ -347,6 +363,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog8',
+    slug: 'serums',
+    aliases: ['serum', 'face-serum', 'actives', 'blog8'],
     number: 8,
     category: 'SKINCARE',
     title: 'What Is a Face Serum and How Is It Used?',
@@ -386,6 +404,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog9',
+    slug: 'sleep',
+    aliases: ['beauty-sleep', 'lifestyle', 'sleep-routine', 'blog9'],
     number: 9,
     category: 'LIFESTYLE',
     title: 'How Sleep Can Affect Your Skin',
@@ -424,6 +444,8 @@ export const ARTICLES: Article[] = [
   },
   {
     id: 'blog10',
+    slug: 'habits',
+    aliases: ['healthy-skin', 'daily-habits', 'skin-habits', 'blog10'],
     number: 10,
     category: 'BEAUTY TIPS',
     title: '10 Everyday Habits for Healthier-Looking Skin',
@@ -467,3 +489,34 @@ export const ARTICLES: Article[] = [
     ]
   }
 ];
+
+/**
+ * Helper to find an article by slug, id, or alias (case-insensitive, trims slashes)
+ */
+export function findArticleBySlugOrId(rawIdentifier: string): Article | undefined {
+  if (!rawIdentifier) return undefined;
+  const clean = rawIdentifier.replace(/^[/#]+/, '').replace(/\/$/, '').toLowerCase();
+
+  return ARTICLES.find(
+    (article) =>
+      article.slug.toLowerCase() === clean ||
+      article.id.toLowerCase() === clean ||
+      article.aliases.some((alias) => alias.toLowerCase() === clean)
+  );
+}
+
+/**
+ * Returns a short, clean relative URL for an article (e.g. /sunscreen)
+ */
+export function getArticleUrl(article: Article): string {
+  return `/${article.slug}`;
+}
+
+/**
+ * Returns the full clean URL for sharing (e.g. https://domain.com/sunscreen)
+ */
+export function getFullArticleUrl(article: Article): string {
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  return `${origin}/${article.slug}`;
+}
+

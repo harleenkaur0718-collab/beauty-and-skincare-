@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
-import { ARTICLES, Article } from './data/articles';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ARTICLES, Article, findArticleBySlugOrId, getArticleUrl } from './data/articles';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { BlogGrid } from './components/BlogGrid';
@@ -41,22 +41,69 @@ export default function App() {
   const [isHabitsOpen, setIsHabitsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Handle URL hash on initial load or change (e.g. #blog1, #blog2...)
+  // Resolves an article from current pathname or hash
+  const resolveArticleFromUrl = useCallback((): Article | null => {
+    // 1. Check pathname (e.g. /sunscreen or /routine)
+    const rawPath = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+    if (rawPath) {
+      const found = findArticleBySlugOrId(rawPath);
+      if (found) return found;
+    }
+
+    // 2. Check hash fallback (e.g. #sunscreen, #/sunscreen, #blog1)
+    const rawHash = window.location.hash.replace(/^#[/]?/, '');
+    if (rawHash) {
+      const found = findArticleBySlugOrId(rawHash);
+      if (found) return found;
+    }
+
+    // 3. Check query param (e.g. ?article=sunscreen or ?blog=sunscreen)
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('article') || params.get('blog') || params.get('post');
+    if (query) {
+      const found = findArticleBySlugOrId(query);
+      if (found) return found;
+    }
+
+    return null;
+  }, []);
+
+  // Sync route on initial load and on popstate / hashchange
   useEffect(() => {
-    const handleHash = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash.startsWith('blog')) {
-        const found = ARTICLES.find((a) => a.id === hash);
-        if (found) {
-          setSelectedArticle(found);
-        }
+    const handleUrlSync = () => {
+      const matched = resolveArticleFromUrl();
+      setSelectedArticle(matched);
+      if (matched) {
+        document.title = `${matched.title} | GlowGuide`;
+      } else {
+        document.title = 'GlowGuide - Beauty & Skincare Journal';
       }
     };
 
-    handleHash();
-    window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
-  }, []);
+    handleUrlSync();
+    window.addEventListener('popstate', handleUrlSync);
+    window.addEventListener('hashchange', handleUrlSync);
+
+    return () => {
+      window.removeEventListener('popstate', handleUrlSync);
+      window.removeEventListener('hashchange', handleUrlSync);
+    };
+  }, [resolveArticleFromUrl]);
+
+  // Navigate to an individual short clean URL
+  const handleSelectArticle = (article: Article) => {
+    setSelectedArticle(article);
+    const cleanUrl = getArticleUrl(article);
+    window.history.pushState({ articleId: article.id, slug: article.slug }, '', cleanUrl);
+    document.title = `${article.title} | GlowGuide`;
+  };
+
+  // Close reader and cleanly revert URL to root
+  const handleCloseArticle = () => {
+    setSelectedArticle(null);
+    window.history.pushState({}, '', '/');
+    document.title = 'GlowGuide - Beauty & Skincare Journal';
+  };
 
   // Save bookmarks to localStorage
   useEffect(() => {
@@ -94,10 +141,10 @@ export default function App() {
 
   const savedArticles = ARTICLES.filter((a) => savedArticleIds.includes(a.id));
 
-  const handleOpenArticleById = (articleId: string) => {
-    const found = ARTICLES.find((a) => a.id === articleId);
+  const handleOpenArticleById = (identifier: string) => {
+    const found = findArticleBySlugOrId(identifier);
     if (found) {
-      setSelectedArticle(found);
+      handleSelectArticle(found);
     }
   };
 
@@ -130,13 +177,10 @@ export default function App() {
           onQuizClick={() => scrollToSection('skin-quiz')}
         />
 
-        {/* 10 Blog Cards Grid with Search and Filter */}
+        {/* 10 Blog Cards Grid with Search, Filter and Clean URLs */}
         <BlogGrid
           articles={ARTICLES}
-          onSelectArticle={(article) => {
-            setSelectedArticle(article);
-            window.location.hash = article.id;
-          }}
+          onSelectArticle={handleSelectArticle}
           savedArticleIds={savedArticleIds}
           onToggleBookmark={toggleBookmark}
           searchQuery={searchQuery}
@@ -159,19 +203,12 @@ export default function App() {
       {/* Footer */}
       <Footer />
 
-      {/* Reader Modal for Full Articles */}
+      {/* Reader Modal for Full Articles with Clean URL permalink */}
       {selectedArticle && (
         <ArticleReaderModal
           article={selectedArticle}
-          onClose={() => {
-            setSelectedArticle(null);
-            // reset hash without jump
-            history.pushState('', document.title, window.location.pathname + window.location.search);
-          }}
-          onSelectArticle={(article) => {
-            setSelectedArticle(article);
-            window.location.hash = article.id;
-          }}
+          onClose={handleCloseArticle}
+          onSelectArticle={handleSelectArticle}
           allArticles={ARTICLES}
           isSaved={savedArticleIds.includes(selectedArticle.id)}
           onToggleBookmark={toggleBookmark}
@@ -183,10 +220,7 @@ export default function App() {
         isOpen={isBookmarksOpen}
         onClose={() => setIsBookmarksOpen(false)}
         savedArticles={savedArticles}
-        onSelectArticle={(article) => {
-          setSelectedArticle(article);
-          window.location.hash = article.id;
-        }}
+        onSelectArticle={handleSelectArticle}
         onRemoveBookmark={toggleBookmark}
         onClearAll={() => setSavedArticleIds([])}
       />

@@ -17,7 +17,7 @@ const RESULTS: Record<string, QuizResult> = {
     description: 'Your skin barrier requires nourishing ceramides, rich fatty acids, and humectants to seal in hydration and prevent microscopic micro-tears.',
     focusIngredients: ['Ceramides NP/AP/EOP', 'Squalane', 'Hyaluronic Acid', 'Shea Butter', 'Colloidal Oat'],
     avoidIngredients: ['Denatured Alcohol', 'Harsh sulfates (SLS)', 'High-strength physical scrubs'],
-    articleId: 'blog4',
+    articleId: 'moisturizer',
   },
   oily: {
     type: 'Oily Skin',
@@ -25,7 +25,7 @@ const RESULTS: Record<string, QuizResult> = {
     description: 'Your goal is regulating excess sebum without stripping the protective moisture barrier, which can trigger reactive rebound oiliness.',
     focusIngredients: ['Salicylic Acid (BHA)', 'Niacinamide (Vitamin B3)', 'Zinc PCA', 'Lightweight Water Gels'],
     avoidIngredients: ['Heavy mineral oils', 'Thick pore-clogging waxes', 'Aggressive alcohol toners'],
-    articleId: 'blog3',
+    articleId: 'cleanser',
   },
   combination: {
     type: 'Combination Skin',
@@ -33,7 +33,7 @@ const RESULTS: Record<string, QuizResult> = {
     description: 'You benefit most from zone-targeted hydration: gentle balancing cleansers and lightweight layers that hydrate cheeks without suffocating your forehead and nose.',
     focusIngredients: ['Hyaluronic Acid', 'Green Tea Extract', 'Niacinamide', 'Ceramide Gel Creams'],
     avoidIngredients: ['Heavy comodogenic oils on T-zone', 'Overly drying astringents'],
-    articleId: 'blog7',
+    articleId: 'skin-types',
   },
   sensitive: {
     type: 'Sensitive Skin',
@@ -41,7 +41,7 @@ const RESULTS: Record<string, QuizResult> = {
     description: 'Minimalism is paramount. Stick to fragrance-free, hypoallergenic formulations with proven anti-inflammatory botanicals and barrier lipids.',
     focusIngredients: ['Centella Asiatica (Cica)', 'Panthenol (Pro-Vitamin B5)', 'Madecassoside', 'Thermal Spring Water'],
     avoidIngredients: ['Synthetic Fragrance', 'Essential Oils', 'High-concentration chemical peels'],
-    articleId: 'blog7',
+    articleId: 'skin-types',
   },
   normal: {
     type: 'Normal / Balanced Skin',
@@ -49,7 +49,7 @@ const RESULTS: Record<string, QuizResult> = {
     description: 'Your objective is defense and preventative longevity: gentle daily cleansing, antioxidant protection, and consistent broad-spectrum SPF.',
     focusIngredients: ['Vitamin C', 'Peptides', 'Broad Spectrum SPF 50', 'Lightweight Squalane'],
     avoidIngredients: ['Overly aggressive exfoliating habits that disrupt equilibrium'],
-    articleId: 'blog1',
+    articleId: 'routine',
   },
 };
 

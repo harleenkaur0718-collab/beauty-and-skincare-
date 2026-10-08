@@ -13,37 +13,37 @@ export const DAILY_HABITS: HabitItem[] = [
     id: 'habit-spf',
     title: 'Apply Daily Broad-Spectrum Sunscreen',
     description: 'Two full finger-lengths of SPF 30+ to face and neck every morning.',
-    category: 'Protection · Blog 2',
+    category: 'Protection · /sunscreen',
   },
   {
     id: 'habit-cleanse',
     title: 'Evening Double Cleanse',
     description: 'Dissolve makeup and sunscreen first, then purify with gentle cleanser.',
-    category: 'Cleansing · Blog 3',
+    category: 'Cleansing · /cleanser',
   },
   {
     id: 'habit-moisture',
     title: 'Moisturize on Damp Skin',
     description: 'Lock in water within 60 seconds of washing to prevent TEWL.',
-    category: 'Hydration · Blog 4',
+    category: 'Hydration · /moisturizer',
   },
   {
     id: 'habit-water',
     title: 'Drink Sufficient Fluids',
     description: 'Keep internal tissue hydration optimal across morning and afternoon.',
-    category: 'Wellness · Blog 5 & 10',
+    category: 'Wellness · /self-care',
   },
   {
     id: 'habit-sleep',
     title: '7-8 Hours Restorative Sleep',
     description: 'Allow cellular repair and growth hormone collagen synthesis overnight.',
-    category: 'Lifestyle · Blog 9',
+    category: 'Lifestyle · /sleep',
   },
   {
     id: 'habit-sanitary',
     title: 'Sanitize Beauty Tools & Phone',
     description: 'Keep makeup brushes, sponge blenders, and phone screen clean.',
-    category: 'Hygiene · Blog 5 & 10',
+    category: 'Hygiene · /habits',
   },
 ];
 

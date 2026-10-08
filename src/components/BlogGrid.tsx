@@ -196,20 +196,29 @@ export const BlogGrid: React.FC<BlogGridProps> = ({
                   <div className="p-6 flex flex-col flex-1 justify-between">
                     <div>
                       {/* Quiet unboxed text metadata with typographic separator */}
-                      <div className="flex items-center gap-2 text-xs font-medium text-[#78716C] tracking-wider uppercase mb-2.5">
-                        <span className="text-[#A3634E] font-semibold">{article.category}</span>
-                        <span aria-hidden="true">·</span>
-                        <span>{article.readTime}</span>
+                      <div className="flex items-center justify-between text-xs font-medium text-[#78716C] tracking-wider uppercase mb-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[#A3634E] font-semibold">{article.category}</span>
+                          <span aria-hidden="true">·</span>
+                          <span>{article.readTime}</span>
+                        </div>
+                        <span className="font-mono text-[11px] text-[#A8A29E] lowercase tracking-normal">
+                          /{article.slug}
+                        </span>
                       </div>
 
                       {/* Title */}
                       <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#1C1917] leading-snug tracking-tight group-hover:text-[#A3634E] transition-colors">
-                        <button
-                          onClick={() => onSelectArticle(article)}
-                          className="text-left w-full focus:outline-none"
+                        <a
+                          href={`/${article.slug}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            onSelectArticle(article);
+                          }}
+                          className="text-left w-full block focus:outline-none"
                         >
                           {article.title}
-                        </button>
+                        </a>
                       </h3>
 
                       {/* Excerpt */}
@@ -224,14 +233,17 @@ export const BlogGrid: React.FC<BlogGridProps> = ({
                         {article.author}
                       </span>
 
-                      <button
-                        type="button"
-                        onClick={() => onSelectArticle(article)}
+                      <a
+                        href={`/${article.slug}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          onSelectArticle(article);
+                        }}
                         className="inline-flex items-center text-xs font-medium text-[#1C1917] hover:text-[#A3634E] transition-colors group/btn"
                       >
                         <span>Read More</span>
                         <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover/btn:translate-x-1" />
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </article>

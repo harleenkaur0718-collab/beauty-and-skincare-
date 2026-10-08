@@ -68,10 +68,20 @@ export const BookmarksDrawer: React.FC<BookmarksDrawerProps> = ({
                 <div>
                   <div className="flex items-center justify-between text-[11px] uppercase tracking-wider text-[#78716C] mb-1">
                     <span className="text-[#A3634E] font-semibold">{article.category}</span>
-                    <span>{article.readTime}</span>
+                    <span className="font-mono text-[#A8A29E]">/{article.slug}</span>
                   </div>
                   <h4 className="font-serif text-base text-[#1C1917] leading-snug line-clamp-2">
-                    {article.title}
+                    <a
+                      href={`/${article.slug}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        onClose();
+                        onSelectArticle(article);
+                      }}
+                      className="hover:text-[#A3634E] transition-colors"
+                    >
+                      {article.title}
+                    </a>
                   </h4>
                 </div>
 
@@ -84,8 +94,10 @@ export const BookmarksDrawer: React.FC<BookmarksDrawerProps> = ({
                     <span>Remove</span>
                   </button>
 
-                  <button
-                    onClick={() => {
+                  <a
+                    href={`/${article.slug}`}
+                    onClick={(e) => {
+                      e.preventDefault();
                       onClose();
                       onSelectArticle(article);
                     }}
@@ -93,7 +105,7 @@ export const BookmarksDrawer: React.FC<BookmarksDrawerProps> = ({
                   >
                     <span>Read Article</span>
                     <ArrowRight className="w-3 h-3" />
-                  </button>
+                  </a>
                 </div>
               </div>
             ))

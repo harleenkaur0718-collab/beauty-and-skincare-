@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Article } from '../data/articles';
+import { Article, getFullArticleUrl, getArticleUrl } from '../data/articles';
 import {
   X,
   Bookmark,
@@ -10,7 +10,8 @@ import {
   Clock,
   Calendar,
   Sparkles,
-  Type
+  Type,
+  Link2
 } from 'lucide-react';
 
 interface ArticleReaderModalProps {
@@ -58,9 +59,12 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
   const prevArticle = currentIndex > 0 ? allArticles[currentIndex - 1] : null;
   const nextArticle = currentIndex < allArticles.length - 1 ? allArticles[currentIndex + 1] : null;
 
+  const fullCleanUrl = getFullArticleUrl(article);
+  const shortPath = getArticleUrl(article);
+
   const handleShare = () => {
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(fullCleanUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
@@ -86,13 +90,34 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
 
         {/* Modal Header Bar */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[#E8E1D9] bg-[#FDFBF7]/90 backdrop-blur-md">
-          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#78716C]">
-            <span className="text-[#A3634E] font-semibold">{article.category}</span>
+          <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[#78716C] overflow-hidden">
+            <span className="text-[#A3634E] font-semibold shrink-0">{article.category}</span>
             <span>·</span>
-            <span>ARTICLE {article.number} OF {allArticles.length}</span>
+            <span className="font-mono text-[#1C1917] bg-[#F5EFEB] px-2 py-0.5 rounded text-[11px] truncate">
+              {shortPath}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Direct Copy Clean URL Button */}
+            <button
+              onClick={handleShare}
+              title="Copy short clean URL"
+              className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-[#E8E1D9] bg-[#F5EFEB] text-xs font-mono text-[#57534E] hover:text-[#1C1917] hover:bg-[#EAE2D8] transition-colors"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-emerald-700 font-sans">Copied!</span>
+                </>
+              ) : (
+                <>
+                  <Link2 className="w-3.5 h-3.5" />
+                  <span className="font-sans">Copy Link</span>
+                </>
+              )}
+            </button>
+
             {/* Font size toggle */}
             <button
               onClick={() => setLargeText(!largeText)}
@@ -115,10 +140,10 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
               <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-current' : ''}`} />
             </button>
 
-            {/* Share */}
+            {/* Share / Copy URL icon */}
             <button
               onClick={handleShare}
-              title="Copy link"
+              title="Share clean link"
               className="p-2 rounded-md border border-[#E8E1D9] bg-[#F5EFEB] text-[#78716C] hover:text-[#1C1917] transition-colors relative"
             >
               {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Share2 className="w-4 h-4" />}
@@ -163,6 +188,21 @@ export const ArticleReaderModal: React.FC<ArticleReaderModalProps> = ({
             <p className="text-base sm:text-lg text-[#57534E] font-normal leading-relaxed">
               {article.deck}
             </p>
+
+            {/* Clean Permalink Info Box */}
+            <div className="pt-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#F5EFEB] border border-[#E8E1D9] rounded-md text-xs text-[#78716C]">
+                <Link2 className="w-3.5 h-3.5 text-[#A3634E]" />
+                <span>Clean URL:</span>
+                <span className="font-mono text-[#1C1917] font-medium">{shortPath}</span>
+                <button
+                  onClick={handleShare}
+                  className="ml-2 text-[11px] text-[#A3634E] hover:underline font-sans"
+                >
+                  {copied ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+            </div>
           </div>
 
           {/* Article Hero Media */}
