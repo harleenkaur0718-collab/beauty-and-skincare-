@@ -1,0 +1,6 @@
+{
+  "name": "GlowGuide - Beauty & Skincare Journal",
+  "description": "Your editorial guide to healthy, glowing skin: simple daily routines, dermatologist-informed tips, skin type quiz, and habit guides.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
